@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerCoin - Performance Report Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d18;
+    --sidebar-bg: #090912;
+    --card-bg: #13131f;
+    --card-border: #1c1c2e;
+    --surface: #1a1a28;
+    --text: #e8e8f0;
+    --text-muted: #8888a8;
+    --text-dim: #5a5a78;
+    --red: #e84545;
+    --red-soft: rgba(232, 69, 69, 0.10);
+    --orange: #f5961e;
+    --orange-soft: rgba(245, 150, 30, 0.10);
+    --green: #3ecf8e;
+    --green-soft: rgba(62, 207, 142, 0.10);
+    --blue: #4d9eff;
+    --blue-soft: rgba(77, 158, 255, 0.10);
+    --yellow: #f0c040;
+    --yellow-soft: rgba(240, 192, 64, 0.08);
+    --accent: #00d4aa;
+    --sidebar-w: 240px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--card-border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    padding: 28px 0;
+    z-index: 100;
+  }
+  .sidebar-brand {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 20px;
+  }
+  .sidebar-brand .logo-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .sidebar-brand .logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 12px 20px 6px;
+  }
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .sidebar a.active { color: var(--text); border-left-color: var(--accent); background: rgba(0,212,170,0.06); }
+  .sidebar-legend {
+    padding: 20px 20px 0;
+    border-top: 1px solid var(--card-border);
+    margin-top: 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── MAIN ─── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 960px;
+  }
+
+  /* ─── HEADER ─── */
+  .report-header {
+    margin-bottom: 36px;
+  }
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .report-header .subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .report-header .subtitle span { margin: 0 8px; opacity: 0.4; }
+
+  /* ─── SCORE GRID ─── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 48px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .score-card {
+    text-align: center;
+  }
+  .score-number {
+    font-size: 42px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .score-number.red { color: var(--red); }
+  .score-number.orange { color: var(--orange); }
+  .score-number.green { color: var(--green); }
+  .score-number.blue { color: var(--blue); }
+  .score-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 8px;
+  }
+  .score-divider {
+    width: 1px;
+    background: var(--card-border);
+    margin: 4px 0;
+  }
+
+  /* ─── CWV GRID ─── */
+  .cwv-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+  .cwv-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .cwv-card.fail { border-top: 3px solid var(--red); }
+  .cwv-card.warn { border-top: 3px solid var(--orange); }
+  .cwv-card.pass { border-top: 3px solid var(--green); }
+  .cwv-metric { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+  .cwv-value { font-size: 22px; font-weight: 600; font-family: 'DM Mono', monospace; letter-spacing: -0.5px; line-height: 1; }
+  .cwv-value.red { color: var(--red); }
+  .cwv-value.orange { color: var(--orange); }
+  .cwv-value.green { color: var(--green); }
+  .cwv-threshold { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+  .cwv-status { font-size: 10px; font-weight: 600; margin-top: 8px; padding: 2px 8px; border-radius: 20px; display: inline-block; }
+  .cwv-status.fail { background: var(--red-soft); color: var(--red); }
+  .cwv-status.warn { background: var(--orange-soft); color: var(--orange); }
+  .cwv-status.pass { background: var(--green-soft); color: var(--green); }
+
+  /* ─── SECTION ─── */
+  .section {
+    margin-bottom: 56px;
+    scroll-margin-top: 32px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .section-icon {
+    width: 32px; height: 32px;
+    background: var(--surface);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+  .issue-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--surface);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* ─── ISSUE CARD ─── */
+  .issue-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .issue-card.critical { border-left: 3px solid var(--red); }
+  .issue-card.important { border-left: 3px solid var(--orange); }
+  .issue-card.minor { border-left: 3px solid var(--blue); }
+  .issue-card-header {
+    padding: 16px 20px 12px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .issue-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .issue-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge.critico { background: var(--red-soft); color: var(--red); }
+  .badge.importante { background: var(--orange-soft); color: var(--orange); }
+  .badge.minor { background: var(--blue-soft); color: var(--blue); }
+  .badge.pass { background: var(--green-soft); color: var(--green); }
+  .badge.savings { background: var(--yellow-soft); color: var(--yellow); }
+
+  .issue-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--card-border);
+  }
+  .issue-body.single { grid-template-columns: 1fr; }
+
+  .problem-col {
+    padding: 14px 18px;
+    background: var(--red-soft);
+    border-right: 1px solid var(--card-border);
+  }
+  .solution-col {
+    padding: 14px 18px;
+    background: var(--green-soft);
+  }
+  .col-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .col-label.problem { color: var(--red); }
+  .col-label.solution { color: var(--green); }
+  .col-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.65; }
+  .col-text ul { padding-left: 16px; }
+  .col-text li { margin-bottom: 5px; }
+  .col-text strong { color: var(--text); font-weight: 500; }
+  .col-text code {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: rgba(255,255,255,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  /* ─── DATA TABLE ─── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .data-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .data-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+  .data-table td:first-child { color: var(--text); font-family: 'DM Mono', monospace; font-size: 11px; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .value-red { color: var(--red); font-weight: 600; }
+  .data-table .value-orange { color: var(--orange); font-weight: 600; }
+
+  /* ─── METRIC ROW ─── */
+  .metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-name { font-size: 13px; color: var(--text); }
+  .metric-value { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; }
+  .metric-value.red { color: var(--red); }
+  .metric-value.orange { color: var(--orange); }
+  .metric-value.green { color: var(--green); }
+
+  /* ─── TREEMAP BAR ─── */
+  .treemap-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .treemap-row:last-child { border-bottom: none; }
+  .treemap-name { font-size: 12px; color: var(--text-muted); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .treemap-name strong { color: var(--text); display: block; font-size: 11px; font-weight: 500; }
+  .treemap-bar-wrap { width: 160px; flex-shrink: 0; }
+  .treemap-bar { height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; }
+  .treemap-bar-fill { height: 100%; border-radius: 3px; background: var(--orange); }
+  .treemap-bar-fill.gtm { background: #4d9eff; }
+  .treemap-bar-fill.fb { background: #1877f2; }
+  .treemap-bar-fill.iub { background: #9c5de8; }
+  .treemap-bar-fill.tw { background: #1da1f2; }
+  .treemap-bar-fill.hotjar { background: #e8433e; }
+  .treemap-bar-fill.local { background: var(--green); }
+  .treemap-size { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); width: 60px; text-align: right; flex-shrink: 0; }
+
+  /* ─── ACTION PLAN ─── */
+  .action-item {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    align-items: flex-start;
+  }
+  .action-item:last-child { border-bottom: none; }
+  .action-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+  .action-num.p1 { background: var(--red-soft); color: var(--red); }
+  .action-num.p2 { background: var(--orange-soft); color: var(--orange); }
+  .action-num.p3 { background: var(--blue-soft); color: var(--blue); }
+  .action-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .action-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .action-owner {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .owner-badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+  }
+  .owner-badge.dev { background: rgba(77,158,255,0.12); color: var(--blue); }
+  .owner-badge.wp { background: rgba(62,207,142,0.12); color: var(--green); }
+  .owner-badge.ele { background: rgba(240,192,64,0.12); color: var(--yellow); }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .callout.warning {
+    background: var(--orange-soft);
+    border-left: 3px solid var(--orange);
+    color: var(--text-muted);
+  }
+  .callout.info {
+    background: var(--blue-soft);
+    border-left: 3px solid var(--blue);
+    color: var(--text-muted);
+  }
+  .callout.success {
+    background: var(--green-soft);
+    border-left: 3px solid var(--green);
+    color: var(--text-muted);
+  }
+  .callout strong { color: var(--text); }
+
+  /* ─── SCORE CONTEXT ─── */
+  .score-context {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+  }
+  .score-context-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 3px; }
+
+  /* ─── DIVIDER ─── */
+  hr.divider { border: none; border-top: 1px solid var(--card-border); margin: 32px 0; }
+
+  /* ─── TAG ─── */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+  .tag.red { background: var(--red-soft); color: var(--red); }
+  .tag.orange { background: var(--orange-soft); color: var(--orange); }
+  .tag.green { background: var(--green-soft); color: var(--green); }
+
+  /* ─── SUMMARY NOTICE ─── */
+  .notice-strip {
+    background: rgba(245, 150, 30, 0.08);
+    border: 1px solid rgba(245, 150, 30, 0.2);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+  }
+  .notice-strip strong { color: var(--orange); }
+
+  @media print {
+    .issue-card, .score-context, .callout, .cwv-grid, .cwv-card,
+    .action-item, .treemap-row, .section-header, .notice-strip {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .issue-body {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .problem-col, .solution-col {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .section {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .issue-card-header {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    .sidebar { display: none !important; }
+    .main { margin-left: 0 !important; padding: 24px 32px !important; }
+    body { background: #0d0d18 !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-text">CareerCoin</div>
+    <div class="logo-sub">Performance Report - Fase 2</div>
+  </div>
+
+  <div class="sidebar-section-label">Panoramica</div>
+  <a href="#panoramica" class="active">📊 Punteggi Lighthouse</a>
+  <a href="#cwv">⚡ Core Web Vitals</a>
+  <a href="#treemap">📦 Mappa dei Payload</a>
+
+  <div class="sidebar-section-label">Problemi Critici</div>
+  <a href="#render-blocking">🔴 Render Blocking</a>
+  <a href="#css-js">🔴 CSS/JS inutilizzati</a>
+  <a href="#main-thread">🔴 Main Thread</a>
+  <a href="#lcp-image">🔴 Immagine LCP</a>
+
+  <div class="sidebar-section-label">Problemi Importanti</div>
+  <a href="#wp-rocket">🟠 WP Rocket</a>
+  <a href="#terze-parti">🟠 Terze Parti</a>
+  <a href="#cache">🟠 Cache</a>
+
+  <div class="sidebar-section-label">Minor</div>
+  <a href="#minor">🔵 Varie</a>
+  <a href="#seo-acc">🔵 SEO & Accessibilità</a>
+
+  <div class="sidebar-section-label">Piano</div>
+  <a href="#piano">✅ Piano d'Azione</a>
+
+  <div class="sidebar-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Critico - blocca performance</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> Importante - impatto medio</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> Minor - da migliorare</div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HEADER -->
+  <div class="report-header">
+    <h1>CareerCoin - Performance Report Mobile</h1>
+    <div class="subtitle">
+      Analisi PageSpeed Insights (Lighthouse 13.0.1) <span>·</span> Mobile <span>·</span> 5 Marzo 2026
+    </div>
+  </div>
+
+  <!-- SCORE GRID -->
+  <div id="panoramica" class="score-grid">
+    <div class="score-card">
+      <div class="score-number red">47</div>
+      <div class="score-label">Performance</div>
+    </div>
+    <div class="score-card">
+      <div class="score-number green">95</div>
+      <div class="score-label">Accessibility</div>
+    </div>
+    <div class="score-card">
+      <div class="score-number green">96</div>
+      <div class="score-label">Best Practices</div>
+    </div>
+    <div class="score-card">
+      <div class="score-number orange">85</div>
+      <div class="score-label">SEO</div>
+    </div>
+  </div>
+
+  <div class="notice-strip">
+    <strong>Dispositivo simulato:</strong> Emulated Moto G Power - Slow 4G throttling - Lighthouse 13.0.1.
+    Il test mobile simula condizioni realistiche per un dispositivo di fascia media. Il punteggio desktop è strutturalmente più alto ma il traffico Meta è quasi interamente da smartphone: questa è la lettura che conta.
+  </div>
+
+  <!-- CWV -->
+  <div id="cwv" class="section">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div class="section-title">Core Web Vitals - Mobile</div>
+      <div class="issue-count">5 metriche</div>
+    </div>
+
+    <div class="cwv-grid">
+      <div class="cwv-card fail">
+        <div class="cwv-metric">FCP</div>
+        <div class="cwv-value red">11.7s</div>
+        <div class="cwv-threshold">Soglia buona: &lt;1.8s</div>
+        <div class="cwv-status fail">Critico</div>
+      </div>
+      <div class="cwv-card fail">
+        <div class="cwv-metric">LCP</div>
+        <div class="cwv-value red">20.5s</div>
+        <div class="cwv-threshold">Soglia buona: &lt;2.5s</div>
+        <div class="cwv-status fail">Critico</div>
+      </div>
+      <div class="cwv-card warn">
+        <div class="cwv-metric">TBT</div>
+        <div class="cwv-value orange">370ms</div>
+        <div class="cwv-threshold">Soglia buona: &lt;200ms</div>
+        <div class="cwv-status warn">Migliorabile</div>
+      </div>
+      <div class="cwv-card pass">
+        <div class="cwv-metric">CLS</div>
+        <div class="cwv-value green">0.004</div>
+        <div class="cwv-threshold">Soglia buona: &lt;0.1</div>
+        <div class="cwv-status pass">Ottimo</div>
+      </div>
+      <div class="cwv-card fail">
+        <div class="cwv-metric">Speed Index</div>
+        <div class="cwv-value red">11.7s</div>
+        <div class="cwv-threshold">Soglia buona: &lt;3.4s</div>
+        <div class="cwv-status fail">Critico</div>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <strong>Lettura d'insieme.</strong> FCP e LCP a 11.7s e 20.5s significano che su un dispositivo mobile medio con connessione 4G lenta, l'utente che arriva dall'annuncio Meta non vede nulla per quasi 12 secondi - e il contenuto principale dopo 20. In queste condizioni, la frequenza di rimbalzo sarà altissima anche prima che l'utente possa leggere il messaggio. Il CLS eccellente (0.004) indica che gli elementi non saltano durante il caricamento - questo è positivo e va preservato nella fase di ottimizzazione.
+    </div>
+  </div>
+
+  <!-- TREEMAP -->
+  <div id="treemap" class="section">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <div class="section-title">Mappa dei Payload - 3,670 KiB totali</div>
+    </div>
+
+    <div class="callout info">
+      <strong>Peso totale della pagina: 3.67 MB.</strong> Per confronto, una pagina performante dovrebbe stare sotto 1.5 MB. Il Lighthouse Treemap mostra 1.6 MiB solo di JavaScript. Di seguito i principali responsabili, raggruppati per origine.
+    </div>
+
+    <div class="score-context">
+      <div class="score-context-title">Script JavaScript - Top Contributors</div>
+      <div class="treemap-row">
+        <div class="treemap-name"><strong>GTM (GA4 + Google Ads)</strong> googletagmanager.com</div>
+        <div class="treemap-bar-wrap"><div class="treemap-bar"><div class="treemap-bar-fill gtm" style="width:95%"></div></div></div>
+        <div class="treemap-size">443 KiB</div>
+      </div>
+      <div class="treemap-row">
+        <div class="treemap-name"><strong>iubenda</strong> cdn.iubenda.com</div>
+        <div class="treemap-bar-wrap"><div class="treemap-bar"><div class="treemap-bar-fill iub" style="width:65%"></div></div></div>
+        <div class="treemap-size">287 KiB</div>
+      </div>
+      <div class="treemap-row">
+        <div class="treemap-name"><strong>Facebook SDK + Pixel</strong> connect.facebook.net</div>
+        <div class="treemap-bar-wrap"><div class="treemap-bar"><div class="treemap-bar-fill fb" style="width:52%"></div></div></div>
+        <div class="treemap-size">232 KiB</div>
+      </div>
+      <div class="treemap-row">
+        <div class="treemap-name"><strong>Twitter Widget</strong> platform.twitter.com</div>
+        <div class="treemap-bar-wrap"><div class="treemap-bar"><div class="treemap-bar-fill tw" style="width:24%"></div></div></div>
+        <div class="treemap-size">132 KiB</div>
+      </div>
+      <div class="treemap-row">
+        <div class="treemap-name"><strong>LinkedIn in.js</strong> platform.linkedin.com</div>
+        <div class="treemap-bar-wrap"><div class="treemap-bar"><div class="treemap-bar-fill tw" style="width:15%"></div></div></div>
+        <div class="treemap-size">67 KiB</div>
+      </div>
+      <div class="treemap-row">
+        <div class="treemap-name"><strong>Hotjar</strong> script.hotjar.com</div>
+        <div class="treemap-bar-wrap"><div class="treemap-bar"><div class="treemap-bar-fill hotjar" style="width:14%"></div></div></div>
+        <div class="treemap-size">63 KiB</div>
+      </div>
+      <div class="treemap-row">
+        <div class="treemap-name"><strong>CareerCoin (first party)</strong> frontend-modules + jquery</div>
+        <div class="treemap-bar-wrap"><div class="treemap-bar"><div class="treemap-bar-fill local" style="width:30%"></div></div></div>
+        <div class="treemap-size">~180 KiB</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CRITICI ─── -->
+
+  <!-- RENDER BLOCKING -->
+  <div id="render-blocking" class="section">
+    <div class="section-header">
+      <div class="section-icon">🚧</div>
+      <div class="section-title">Render Blocking Requests</div>
+      <div class="issue-count">1 issue critico</div>
+    </div>
+
+    <div class="issue-card critical">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">80+ file CSS bloccano il rendering iniziale</div>
+          <div class="issue-subtitle">Est. savings: 9,350 ms - Impatto su FCP e LCP</div>
+        </div>
+        <span class="badge critico">Critico</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            Il browser deve scaricare e processare oltre 80 fogli di stile CSS prima di poter disegnare qualsiasi cosa sullo schermo. Questo blocca il rendering per <strong>9.35 secondi</strong> su rete 4G lenta. Tra i file più pesanti:
+            <ul style="margin-top:8px">
+              <li><code>buddypress.css</code> - 104 KiB</li>
+              <li><code>buddypress.min.css</code> - 93 KiB</li>
+              <li><code>widget-styles.css</code> - 47 KiB</li>
+              <li><code>theme.css</code> - 43 KiB</li>
+              <li><code>learndash.css</code> - 39 KiB</li>
+            </ul>
+            <p style="margin-top:8px">Molti di questi CSS appartengono a plugin attivi ma non utilizzati sulla homepage (LearnDash, GamiPress, WooCommerce, BuddyZoom, BP Polls ecc). Inoltre iubenda carica 3 script di consenso nella critical path aggiungendo ulteriori ~5 secondi.</p>
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Attivare <strong>WP Rocket → Remove Unused CSS</strong> (Safe Mode): genera automaticamente fogli di stile specifici per ogni pagina rimuovendo tutto il CSS non necessario</li>
+              <li>Verificare quali plugin caricano CSS globalmente e limitare l'enqueue alle sole pagine dove il plugin è effettivamente usato (tramite filtro <code>wp_enqueue_scripts</code>)</li>
+              <li>Aggiungere <strong>preconnect</strong> a <code>cdn.iubenda.com</code> nell'<code>&lt;head&gt;</code> - PSI stima 300ms di risparmio LCP solo da questa modifica</li>
+              <li>Configurare WP Rocket per escludere GTM e iubenda dal delay (già identificato nel Progetto 1 ma non ancora implementato)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS/JS inutilizzati -->
+  <div id="css-js" class="section">
+    <div class="section-header">
+      <div class="section-icon">🗑</div>
+      <div class="section-title">CSS e JavaScript inutilizzati</div>
+      <div class="issue-count">2 issue critici</div>
+    </div>
+
+    <div class="issue-card critical">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">526 KiB di CSS non usati nella pagina</div>
+          <div class="issue-subtitle">Est. savings: 526 KiB - WP Rocket: Remove Unused CSS disattivato</div>
+        </div>
+        <span class="badge critico">Critico</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            Di tutti i CSS caricati sulla homepage, il 98% del codice non è usato dalla pagina stessa. I principali responsabili:
+            <ul style="margin-top:8px">
+              <li><code>buddypress.css</code> - 103.5 KiB sprecati</li>
+              <li><code>buddypress.min.css</code> - 92.2 KiB sprecati</li>
+              <li><code>widget-styles.css</code> - 46.1 KiB sprecati</li>
+              <li><code>learndash.css</code> - 38.4 KiB sprecati</li>
+              <li><code>dashicons.min.css</code> - 34.2 KiB sprecati</li>
+            </ul>
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Attivare <strong>WP Rocket → Remove Unused CSS</strong> - il PSI lo suggerisce esplicitamente per questo sito</li>
+              <li>Testare in modalità Safe Mode prima, poi verificare che nessun elemento si rompa visivamente</li>
+              <li>Se il plugin usa Safe Mode con whitelist, aggiungere manualmente le regole necessarie per la homepage</li>
+              <li>Alternativa: valutare Asset CleanUp Pro per disattivare CSS plugin-by-plugin per ogni page template</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card critical">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">551 KiB di JavaScript non usati nella pagina</div>
+          <div class="issue-subtitle">Est. savings: 551 KiB - Delay JS disattivato in WP Rocket</div>
+        </div>
+        <span class="badge critico">Critico</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            551 KiB di JavaScript vengono scaricati ma non eseguiti durante il caricamento iniziale. I principali:
+            <ul style="margin-top:8px">
+              <li><strong>GTM</strong> - 180 KiB inutilizzati</li>
+              <li><strong>Twitter widget_iframe</strong> - 99.2 KiB inutilizzati</li>
+              <li><strong>Facebook SDK</strong> - 89.3 KiB inutilizzati</li>
+              <li><strong>iubenda</strong> - 69.6 KiB inutilizzati</li>
+              <li><strong>LinkedIn in.js</strong> - 40 KiB inutilizzati</li>
+              <li><strong>Hotjar</strong> - 26 KiB inutilizzati</li>
+            </ul>
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Attivare <strong>WP Rocket → Delay JavaScript Execution</strong> - ritarda tutti gli script non critici fino al primo gesto dell'utente</li>
+              <li>Escludere GTM e iubenda dal delay (già in agenda nel Progetto 1) - questi devono caricare subito per il consent e il tracking</li>
+              <li>Valutare la rimozione del <strong>Twitter widget</strong> e del <strong>Pinterest JS</strong> dalla homepage - se non ci sono embed attivi, non vanno caricati</li>
+              <li>Valutare il caricamento condizionale di <strong>LinkedIn in.js</strong> solo sulle pagine dove è effettivamente usato</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN THREAD -->
+  <div id="main-thread" class="section">
+    <div class="section-header">
+      <div class="section-icon">🧵</div>
+      <div class="section-title">Main Thread Congestionato</div>
+      <div class="issue-count">2 issue critici</div>
+    </div>
+
+    <div class="issue-card critical">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">4.4 secondi di lavoro sul main thread - 18 long tasks</div>
+          <div class="issue-subtitle">JS execution time: 2.0s - Impatto su TBT e interattività</div>
+        </div>
+        <span class="badge critico">Critico</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            Il main thread è impegnato per 4.4 secondi, con 18 task che superano i 50ms ciascuno. Dettaglio per fonte:
+            <table class="data-table" style="margin-top:8px">
+              <tr><th>Script</th><th>Main Thread</th></tr>
+              <tr><td>CareerCoin (first party)</td><td class="value-red">1,655 ms</td></tr>
+              <tr><td>Hotjar</td><td class="value-red">549 ms</td></tr>
+              <tr><td>Google Tag Manager</td><td class="value-orange">493 ms</td></tr>
+              <tr><td>Facebook SDK</td><td class="value-orange">282 ms</td></tr>
+              <tr><td>iubenda</td><td class="value-orange">267 ms</td></tr>
+              <tr><td>Twitter widget</td><td>62 ms</td></tr>
+              <tr><td>LinkedIn</td><td>57 ms</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li><strong>Rimuovere o disattivare Hotjar</strong> - consuma 549ms di main thread e i suoi WebSocket falliscono (ERR_NAME_NOT_RESOLVED). Sta solo pesando la pagina senza dare dati utili</li>
+              <li>Con WP Rocket Delay JS attivo, GTM e script social verranno eseguiti dopo l'interazione utente, liberando il main thread durante il caricamento iniziale</li>
+              <li>Verificare quale codice interno occupa 1,136ms nella root di <code>careercoin.io</code> - probabilmente Elementor o codice inline non ottimizzato</li>
+              <li>Attivare <strong>WP Rocket → Minify JS</strong> per ridurre parsing time di altri 13 KiB</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LCP IMAGE -->
+  <div id="lcp-image" class="section">
+    <div class="section-header">
+      <div class="section-icon">🖼</div>
+      <div class="section-title">Immagine LCP mal configurata</div>
+      <div class="issue-count">2 issue critici</div>
+    </div>
+
+    <div class="issue-card critical">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">L'immagine principale ha lazy loading abilitato</div>
+          <div class="issue-subtitle">LCP element: img.attachment-full - resource load delay: 2,760ms</div>
+        </div>
+        <span class="badge critico">Critico</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            L'immagine hero della homepage - che è l'elemento LCP (Largest Contentful Paint), cioè il contenuto visivo più grande above the fold - ha il <strong>lazy loading applicato</strong>. Questo significa che il browser aspetta a scaricarla, ritardando il suo rendering di <strong>2,760ms aggiuntivi</strong>. L'effetto opposto di quello desiderato.
+            <br><br>
+            In più manca <code>fetchpriority="high"</code>, che segnalerebbe al browser di scaricare questo asset prima di tutti gli altri.
+            <br><br>
+            L'immagine viene servita a 768×446px ma è displayata a 368×214px: occcupa il <strong>doppio dello spazio necessario</strong> per niente.
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Nell'impostazione dell'immagine Elementor, <strong>disattivare il lazy load</strong> per l'immagine hero - Elementor ha l'opzione per escludere singoli elementi</li>
+              <li>Aggiungere <code>fetchpriority="high"</code> all'immagine hero tramite filtro WordPress o manualmente nel template</li>
+              <li>Creare una versione dell'immagine a dimensioni corrette (400×232px circa) e servirla sulla homepage invece del full-size - risparmio stimato <strong>34 KiB</strong></li>
+              <li>Convertire l'immagine in formato <strong>WebP</strong> se non già fatto</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── IMPORTANTI ─── -->
+
+  <!-- WP ROCKET -->
+  <div id="wp-rocket" class="section">
+    <div class="section-header">
+      <div class="section-icon">🚀</div>
+      <div class="section-title">WP Rocket - Funzionalità non attive</div>
+      <div class="issue-count">1 issue importante</div>
+    </div>
+
+    <div class="callout warning">
+      <strong>Nota:</strong> WP Rocket è rilevato sul sito ma le sue funzionalità di ottimizzazione principali risultano disattivate. Il PSI stesso suggerisce esplicitamente di abilitarle come soluzione agli issues rilevati. La configurazione corretta di WP Rocket è il singolo intervento con il più alto rapporto impatto/sforzo.
+    </div>
+
+    <div class="issue-card important">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">WP Rocket: ottimizzazioni CSS e JS disattivate</div>
+          <div class="issue-subtitle">Plugin installato ma non configurato per la fase ads</div>
+        </div>
+        <span class="badge importante">Importante</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            Le seguenti funzionalità di WP Rocket risultano disattivate, e ognuna copre uno degli issue critici identificati:
+            <ul style="margin-top:8px">
+              <li><strong>Remove Unused CSS</strong> - disattivato → 526 KiB di CSS sprecati</li>
+              <li><strong>Delay JavaScript Execution</strong> - disattivato → 551 KiB di JS inutilizzati</li>
+              <li><strong>Minify CSS</strong> - disattivato (passed audit ma suggerito)</li>
+              <li><strong>Minify JavaScript</strong> - disattivato → 13 KiB di risparmio</li>
+              <li>Le esclusioni GTM e iubenda da Delay JS (già in agenda da Progetto 1) <strong>non sono ancora state aggiunte</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            Attivare in questo ordine con test visivo tra ogni step:
+            <ol style="padding-left:16px; margin-top:8px">
+              <li style="margin-bottom:6px"><strong>Minify CSS + Minify JS</strong> - basso rischio, effetto immediato</li>
+              <li style="margin-bottom:6px"><strong>Delay JS</strong> - aggiungere alle esclusioni: <code>googletagmanager.com</code>, <code>GTM-MG5RK4Q</code>, <code>cdn.iubenda.com</code>, <code>iubenda_cs.js</code>, <code>cs.iubenda.com</code></li>
+              <li style="margin-bottom:6px"><strong>Remove Unused CSS</strong> - abilitare in Safe Mode, testare visivamente tutta la homepage su mobile e desktop</li>
+            </ol>
+            <p style="margin-top:8px">Svuotare la cache WP Rocket dopo ogni modifica e ritestare su PSI.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERZE PARTI -->
+  <div id="terze-parti" class="section">
+    <div class="section-header">
+      <div class="section-icon">🌐</div>
+      <div class="section-title">Script di Terze Parti</div>
+      <div class="issue-count">2 issue importanti</div>
+    </div>
+
+    <div class="issue-card important">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Hotjar carica e fallisce - 549ms di main thread sprecati</div>
+          <div class="issue-subtitle">4 errori WebSocket in console - ERR_NAME_NOT_RESOLVED</div>
+        </div>
+        <span class="badge importante">Importante</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            Hotjar è installato (site_id=3274279) ma il suo WebSocket non riesce a connettersi - 4 errori <code>ERR_NAME_NOT_RESOLVED</code> vengono loggati in console. Hotjar sta quindi occupando <strong>549ms di main thread</strong> e <strong>63 KiB di banda</strong> senza fornire alcun dato. È il secondo consumatore di main thread dopo il codice CareerCoin stesso.
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Se Hotjar non è in uso attivo, <strong>rimuoverlo completamente</strong> - liberare 549ms di main thread e 63 KiB in un'operazione singola</li>
+              <li>Se si vuole mantenere Hotjar per il futuro, caricare lo script tramite GTM con trigger a evento utente (primo scroll o click) invece che al page load</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card important">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Twitter, Pinterest, LinkedIn caricano script sociali non necessari</div>
+          <div class="issue-subtitle">Twitter widget: 103 KiB - Pinterest: 20 KiB - LinkedIn: 67 KiB</div>
+        </div>
+        <span class="badge importante">Importante</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            La homepage carica widget JavaScript di Twitter (103 KiB), Pinterest (20 KiB) e LinkedIn (67 KiB). Il widget iframe di Twitter da solo pesa 103 KiB con 99 KiB inutilizzati - è quasi completamente sprecato. Non è chiaro se questi script siano necessari alla homepage o vengano caricati globalmente da un plugin social sharing.
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Identificare il plugin che carica questi script (probabilmente un plugin di social sharing buttons) e limitare l'enqueue ai soli post/pagine dove i pulsanti sono presenti</li>
+              <li>Se i pulsanti di share non esistono sulla homepage, disabilitare completamente per quella page template</li>
+              <li>Totale risparmio stimato: <strong>190 KiB</strong> di script rimossi</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CACHE -->
+  <div id="cache" class="section">
+    <div class="section-header">
+      <div class="section-icon">💾</div>
+      <div class="section-title">Politiche di Cache Inefficienti</div>
+      <div class="issue-count">1 issue importante</div>
+    </div>
+
+    <div class="issue-card important">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Asset social con cache TTL troppo breve - 292 KiB da ricaricare ogni visita</div>
+          <div class="issue-subtitle">Facebook: 20min - Pinterest: 4min - Hotjar: 1min</div>
+        </div>
+        <span class="badge importante">Importante</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">
+            Gli script social hanno policy di cache brevissime, il che significa che ogni ritorno dell'utente sul sito scarica di nuovo gli stessi file:
+            <table class="data-table" style="margin-top:8px">
+              <tr><th>Script</th><th>Cache TTL</th><th>Dimensione</th></tr>
+              <tr><td>Facebook fbevents.js</td><td class="value-red">20 min</td><td>97 KiB</td></tr>
+              <tr><td>Facebook bundle/sdk.js</td><td class="value-red">20 min</td><td>85 KiB</td></tr>
+              <tr><td>Pinterest pinit_main.js</td><td class="value-red">4 min</td><td>19 KiB</td></tr>
+              <tr><td>Hotjar</td><td class="value-red">1 min</td><td>6 KiB</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Questa limitazione è sui server di terze parti e <strong>non è controllabile da noi</strong> - è una scelta di Facebook, Pinterest ecc</li>
+              <li>La strategia corretta è <strong>ridurre il numero di script terze parti caricati</strong> (vedi issue precedente su Twitter/Pinterest/LinkedIn) - meno script = meno problema cache</li>
+              <li>Assicurarsi che WP Rocket gestisca correttamente la cache dei file first-party con TTL lunghi</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MINOR ─── -->
+  <div id="minor" class="section">
+    <div class="section-header">
+      <div class="section-icon">🔵</div>
+      <div class="section-title">Issues Minor</div>
+      <div class="issue-count">5 issues</div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Legacy JavaScript - polyfill non necessari</div>
+          <div class="issue-subtitle">Est. savings: 69 KiB - WPML browser-redirect/app.js + Facebook SDK</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">Il file <code>browser-redirect/app.js</code> di WPML (il plugin di traduzione) contiene 34.6 KiB di polyfill JavaScript per funzioni già native in tutti i browser moderni (Array.from, Object.assign, Promise ecc). Il Facebook SDK contribuisce altri 34.3 KiB. Per WPML: aggiornare il plugin all'ultima versione potrebbe risolvere, oppure aprire un ticket con WPML per richiedere una build senza transpiling legacy.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">DOM size eccessivo - 979 elementi, profondità 21</div>
+          <div class="issue-subtitle">Threshold consigliato: &lt;800 elementi - 18 KiB inline script inline non attribuito</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">979 elementi DOM è sopra soglia ma non critico. L'elemento più profondo (21 livelli) è un <code>&lt;span&gt;</code> nel titolo hero. Il body ha 159 figli diretti. La causa principale è Elementor che aggiunge wrapper div multipli per ogni widget. Da monitorare: se si aggiungono sezioni alla homepage, potrebbe peggiorare. Non richiede intervento immediato, ma è da tenere sotto controllo durante il redesign della homepage.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Forced Reflow - jQuery e iubenda causano reflow ripetuti</div>
+          <div class="issue-subtitle">Totale reflow time: ~395ms - Hotjar: 63ms, jQuery: 63ms</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">Hotjar e iubenda interrogano proprietà geometriche del DOM (offsetWidth) dopo aver modificato lo stile degli elementi, causando forced reflow. La rimozione di Hotjar elimina 63ms di reflow. Il resto (jQuery, iubenda) è difficilmente controllabile senza toccare il core dei plugin.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Preconnect mancante per cdn.iubenda.com</div>
+          <div class="issue-subtitle">Est. LCP savings: 300ms - una riga nell'head</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">PSI suggerisce esplicitamente di aggiungere un hint preconnect a <code>cdn.iubenda.com</code> per un risparmio stimato di 300ms su LCP. Si tratta di aggiungere nell'<code>&lt;head&gt;</code>: <code>&lt;link rel="preconnect" href="https://cdn.iubenda.com"&gt;</code>. Attualmente è presente solo il preconnect a <code>fonts.gstatic.com</code>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Google Fonts carica 115 KiB di font - layout shift minimo (0.004)</div>
+          <div class="issue-subtitle">Causato dal font Playfair nel titolo hero - CLS accettabile</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">Il CLS di 0.004 è eccellente. Il layout shift identificato è causato dal font Playfair nel titolo hero che sostituisce il fallback. Non richiede intervento urgente. Per completezza: usare <code>font-display: swap</code> o <code>optional</code> con font metric overrides eliminerebbe anche questa minima oscillazione. Google Fonts è già in preconnect, che è corretto.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO & ACCESSIBILITA -->
+  <div id="seo-acc" class="section">
+    <div class="section-header">
+      <div class="section-icon">🔎</div>
+      <div class="section-title">SEO & Accessibilità</div>
+      <div class="issue-count">4 issues</div>
+    </div>
+
+    <div class="issue-card important">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">robots.txt non valido - Lighthouse non riesce a scaricarlo</div>
+          <div class="issue-subtitle">SEO score: 85 - Crawling and Indexing</div>
+        </div>
+        <span class="badge importante">Importante</span>
+      </div>
+      <div class="issue-body">
+        <div class="problem-col">
+          <div class="col-label problem">⚠ Problema</div>
+          <div class="col-text">Lighthouse non riesce a scaricare il file <code>robots.txt</code> di careercoin.io. Se il file è malformato o restituisce un errore, i crawler di Google non sanno come indicizzare il sito correttamente. Questo può bloccare o rallentare l'indicizzazione di nuove pagine e impatta il punteggio SEO (85 invece di potenziale 100+).</div>
+        </div>
+        <div class="solution-col">
+          <div class="col-label solution">✓ Soluzione Proposta</div>
+          <div class="col-text">
+            <ul>
+              <li>Verificare che <code>careercoin.io/robots.txt</code> esista e risponda con HTTP 200</li>
+              <li>Se non esiste, crearlo con il plugin Yoast SEO o Rank Math (già attivo sul sito?)</li>
+              <li>Validarlo con il Google Search Console URL Inspection Tool</li>
+              <li>Minimo necessario: <code>User-agent: *</code> / <code>Allow: /</code> / <code>Sitemap: https://careercoin.io/sitemap.xml</code></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Link "Learn More" non descrittivo per i crawler</div>
+          <div class="issue-subtitle">SEO: 1 link trovato - /contactus/ con testo generico</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">C'è un link alla pagina <code>/contactus/</code> con testo "Learn More" - testo generico che non dice ai motori di ricerca cosa c'è in quella pagina. Cambiarlo in qualcosa di descrittivo come "Contattaci" o "Scopri come contattarci" migliora il segnale SEO e l'accessibilità. Intervento di 5 minuti in Elementor.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Logo link senza testo accessibile - 2 elementi</div>
+          <div class="issue-subtitle">Accessibility: 95 - Links do not have a discernible name</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">Due link del logo (<code>.bb-mobile-header</code> e <code>.bb-mobile-panel-header</code>) non hanno testo leggibile da screen reader - sono link immagine senza <code>aria-label</code>. Da aggiungere: <code>aria-label="CareerCoin - Homepage"</code> su entrambi i tag <code>&lt;a&gt;</code>. È un fix rapido nel child theme BuddyBoss.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card minor">
+      <div class="issue-card-header">
+        <div>
+          <div class="issue-title">Documento senza landmark &lt;main&gt;</div>
+          <div class="issue-subtitle">Accessibility: Best Practice - BuddyBoss tema non usa &lt;main&gt;</div>
+        </div>
+        <span class="badge minor">Minor</span>
+      </div>
+      <div class="issue-body single">
+        <div class="solution-col" style="background: var(--blue-soft)">
+          <div class="col-label" style="color: var(--blue)">→ Nota</div>
+          <div class="col-text">La pagina non ha un elemento <code>&lt;main&gt;</code> che aiuti i lettori di schermo a navigare il contenuto principale. Il tema BuddyBoss usa strutture div senza landmark semantici. Fix: aggiungere <code>role="main"</code> al wrapper principale del contenuto nel child theme, oppure sostituire il <code>&lt;div&gt;</code> principale con <code>&lt;main&gt;</code>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PIANO D'AZIONE -->
+  <div id="piano" class="section">
+    <div class="section-header">
+      <div class="section-icon">✅</div>
+      <div class="section-title">Piano d'Azione Prioritizzato</div>
+    </div>
+
+    <div class="callout info">
+      <strong>Obiettivo:</strong> Portare il Performance Score mobile da <strong>47</strong> a un range di <strong>65–75</strong> con gli interventi ad alto impatto/basso sforzo elencati qui sotto. Un punteggio sopra 60 riduce significativamente il costo per click nelle campagne Meta - Google e Meta penalizzano le destinazioni con alta frequenza di rimbalzo.
+    </div>
+
+    <div class="score-context">
+      <div class="score-context-title">Priorità 1 - Immediato (sviluppatore + WP Rocket)</div>
+
+      <div class="action-item">
+        <div class="action-num p1">1</div>
+        <div>
+          <div class="action-title">Attivare WP Rocket: Remove Unused CSS + Delay JS + Minify CSS/JS</div>
+          <div class="action-desc">Il singolo intervento con il più alto impatto. Rimuove 526 KiB di CSS, differisce 551 KiB di JS al primo gesto utente, libera il main thread durante il caricamento. Stimato: FCP da 11.7s → ~4–5s, LCP da 20.5s → ~8–12s.</div>
+          <div class="action-owner">
+            <span class="owner-badge wp">WP Rocket</span>
+            escludere GTM + iubenda dal Delay JS
+          </div>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num p1">2</div>
+        <div>
+          <div class="action-title">Rimuovere Hotjar o ritardarlo a evento utente</div>
+          <div class="action-desc">549ms di main thread liberati in un'operazione. Hotjar sta loggando 4 errori WebSocket per ogni pageview. Se non si usano le heatmap attivamente, rimuoverlo ora - se si vuole tenerlo, spostarlo su GTM con trigger a first scroll.</div>
+          <div class="action-owner">
+            <span class="owner-badge wp">GTM</span>
+            spostare trigger da pageview a first_scroll
+          </div>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num p1">3</div>
+        <div>
+          <div class="action-title">Correggere l'immagine LCP: rimuovere lazy load + aggiungere fetchpriority="high"</div>
+          <div class="action-desc">L'immagine hero ha il lazy load abilitato - questo blocca il suo download ritardando l'LCP di quasi 3 secondi aggiuntivi. Da correggere nelle impostazioni dell'immagine Elementor. Aggiungere anche fetchpriority="high" via filtro WordPress per segnalare al browser la priorità assoluta.</div>
+          <div class="action-owner">
+            <span class="owner-badge ele">Elementor</span>
+            impostazioni immagine + filtro PHP
+          </div>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num p1">4</div>
+        <div>
+          <div class="action-title">Aggiungere preconnect a cdn.iubenda.com nell'&lt;head&gt;</div>
+          <div class="action-desc">300ms di risparmio LCP stimati da PSI. Una riga da aggiungere nel child theme: &lt;link rel="preconnect" href="https://cdn.iubenda.com"&gt;. Rapido, nessun rischio.</div>
+          <div class="action-owner">
+            <span class="owner-badge dev">Developer</span>
+            functions.php del child theme
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-context">
+      <div class="score-context-title">Priorità 2 - Breve termine</div>
+
+      <div class="action-item">
+        <div class="action-num p2">5</div>
+        <div>
+          <div class="action-title">Identificare e rimuovere i plugin che caricano Twitter Widget, Pinterest, LinkedIn sulla homepage</div>
+          <div class="action-desc">190 KiB di script sociali che non servono sulla homepage. Identificare il plugin responsabile (probabile social sharing buttons), limitare il caricamento ai post dove i pulsanti sono visibili.</div>
+          <div class="action-owner">
+            <span class="owner-badge wp">WordPress Plugin</span>
+            enqueue condizionale per page template
+          </div>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num p2">6</div>
+        <div>
+          <div class="action-title">Ridimensionare e convertire l'immagine LCP in WebP</div>
+          <div class="action-desc">Attualmente 768×446px servita in un container 368×214px. Creare una versione correttamente dimensionata risparmia 34 KiB. Usare Smush, ShortPixel o EWWW Image Optimizer per conversione automatica WebP.</div>
+          <div class="action-owner">
+            <span class="owner-badge wp">WordPress Media</span>
+            plugin ottimizzazione immagini
+          </div>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num p2">7</div>
+        <div>
+          <div class="action-title">Correggere robots.txt</div>
+          <div class="action-desc">Verificare che careercoin.io/robots.txt esista e sia valido. Se manca, crearlo con Yoast o Rank Math. Validare in Google Search Console.</div>
+          <div class="action-owner">
+            <span class="owner-badge wp">Yoast / Rank Math</span>
+            SEO plugin settings
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-context">
+      <div class="score-context-title">Priorità 3 - Da monitorare</div>
+
+      <div class="action-item">
+        <div class="action-num p3">8</div>
+        <div>
+          <div class="action-title">Aggiornare WPML e verificare riduzione polyfill legacy</div>
+          <div class="action-desc">Il file browser-redirect di WPML contiene 34 KiB di polyfill per browser obsoleti. Aggiornare WPML all'ultima versione e reverificare su PSI se il risparmio si realizza.</div>
+          <div class="action-owner">
+            <span class="owner-badge dev">Developer</span>
+            aggiornamento plugin
+          </div>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num p3">9</div>
+        <div>
+          <div class="action-title">Aggiungere aria-label ai link logo + role="main" al contenuto principale</div>
+          <div class="action-desc">Migliora l'Accessibility score da 95 a potenzialmente 100. Accessibilità passata 95 non è urgente, ma sono fix veloci se lo sviluppatore è già nel child theme per altri interventi.</div>
+          <div class="action-owner">
+            <span class="owner-badge dev">Developer</span>
+            BuddyBoss child theme
+          </div>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num p3">10</div>
+        <div>
+          <div class="action-title">Cambiare testo "Learn More" nel link /contactus/</div>
+          <div class="action-desc">Testo generico che non aiuta i crawler. Cambiarlo in "Contattaci" o "Scopri come contattarci". 5 minuti in Elementor, migliora il SEO score.</div>
+          <div class="action-owner">
+            <span class="owner-badge ele">Elementor</span>
+            homepage editor
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout success" style="margin-top:24px">
+      <strong>Impatto atteso sulle campagne Meta.</strong> Un Performance score che sale da 47 a 65–70 riduce la frequenza di rimbalzo degli utenti provenienti dagli annunci. Meta misura la qualità della destinazione e, nel tempo, penalizza gli advertiser che mandano traffico su pagine lente aumentando il costo per click. Risolvere i punti 1–4 del piano prima del lancio delle campagne è il prerequisito tecnico per rendere l'investimento ads efficiente.
+    </div>
+  </div>
+
+  <div style="text-align:center; padding: 32px 0; color: var(--text-dim); font-size: 12px; border-top: 1px solid var(--card-border); margin-top: 16px;">
+    CareerCoin - Performance Report Mobile - Marzo 2026 · Antonio Caruso Marketing &amp; Tracking
+  </div>
+
+</main>
+
+<script>
+  // Sidebar active link on scroll
+  const sections = document.querySelectorAll('.section, #panoramica, #cwv, #treemap');
+  const links = document.querySelectorAll('.sidebar a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const id = entry.target.id;
+        const active = document.querySelector(`.sidebar a[href="#${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '-60px 0px -60% 0px' });
+
+  document.querySelectorAll('[id]').forEach(el => observer.observe(el));
+
+  // Smooth scroll
+  document.querySelectorAll('.sidebar a').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

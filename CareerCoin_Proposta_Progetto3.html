@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerCoin - Proposta Progetto 3 - Acquisizione Ads + Email Funnel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d18;
+    --sidebar-bg: #090912;
+    --card-bg: #13131f;
+    --card-border: #1c1c2e;
+    --surface: #1a1a28;
+    --text: #e8e8f0;
+    --text-muted: #8888a8;
+    --text-dim: #5a5a78;
+    --red: #e84545;
+    --red-soft: rgba(232, 69, 69, 0.10);
+    --orange: #f5961e;
+    --orange-soft: rgba(245, 150, 30, 0.10);
+    --green: #3ecf8e;
+    --green-soft: rgba(62, 207, 142, 0.10);
+    --blue: #4d9eff;
+    --blue-soft: rgba(77, 158, 255, 0.10);
+    --yellow: #f0c040;
+    --yellow-soft: rgba(240, 192, 64, 0.08);
+    --accent: #00d4aa;
+    --accent-soft: rgba(0, 212, 170, 0.10);
+    --sidebar-w: 240px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--card-border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    padding: 28px 0;
+    z-index: 100;
+  }
+  .sidebar-brand {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 20px;
+  }
+  .sidebar-brand .logo-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .sidebar-brand .logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 14px 20px 6px;
+  }
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .sidebar a.active { color: var(--text); border-left-color: var(--accent); background: var(--accent-soft); }
+
+  /* ─── MAIN ─── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 48px 56px 80px;
+    max-width: 1000px;
+  }
+
+  /* ─── HEADER ─── */
+  .report-header {
+    margin-bottom: 44px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .report-header .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .report-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.6px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .report-header .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 12px;
+  }
+  .report-header .subtitle span { margin: 0 8px; opacity: 0.4; }
+
+  /* ─── SECTIONS ─── */
+  section { margin-bottom: 52px; }
+  section h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  section h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 22px 0 10px;
+  }
+  section p {
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  section p strong { color: var(--text); font-weight: 600; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card.accent { border-left: 3px solid var(--accent); }
+  .card.green { border-left: 3px solid var(--green); }
+  .card.blue { border-left: 3px solid var(--blue); }
+  .card.orange { border-left: 3px solid var(--orange); }
+  .card.yellow { border-left: 3px solid var(--yellow); }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .card-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .card-tag.blue { background: var(--blue-soft); color: var(--blue); }
+  .card-tag.green { background: var(--green-soft); color: var(--green); }
+  .card-tag.orange { background: var(--orange-soft); color: var(--orange); }
+  .card-tag.yellow { background: var(--yellow-soft); color: var(--yellow); }
+
+  .card ul {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .card ul li {
+    color: var(--text-muted);
+    padding: 6px 0 6px 18px;
+    position: relative;
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+  .card ul li::before {
+    content: "›";
+    color: var(--accent);
+    position: absolute;
+    left: 0;
+    top: 6px;
+    font-weight: 600;
+  }
+  .card ul li strong { color: var(--text); font-weight: 600; }
+
+  /* ─── PRICE BOX ─── */
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--card-border);
+  }
+  .price-meta {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .price-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  /* ─── FUNNEL ─── */
+  .funnel {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 18px 0 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+  }
+  .funnel-step {
+    color: var(--text);
+    background: var(--surface);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+  }
+  .funnel-step.start { color: var(--blue); border-color: rgba(77, 158, 255, 0.3); }
+  .funnel-step.end { color: var(--accent); border-color: rgba(0, 212, 170, 0.3); }
+  .funnel-arrow { color: var(--text-dim); font-weight: 600; }
+
+  /* ─── TABLE ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  th, td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 13.5px;
+  }
+  th {
+    background: var(--surface);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td { color: var(--text-muted); }
+  td strong { color: var(--text); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  td.price { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--accent); }
+  tr.total { background: var(--accent-soft); }
+  tr.total td { color: var(--text); font-weight: 600; font-size: 14px; }
+  tr.total td.price { font-size: 18px; }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    background: var(--blue-soft);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 16px 22px;
+    margin: 18px 0;
+  }
+  .callout.green { background: var(--green-soft); border-left-color: var(--green); }
+  .callout.yellow { background: var(--yellow-soft); border-left-color: var(--yellow); }
+  .callout.accent { background: var(--accent-soft); border-left-color: var(--accent); }
+  .callout p { color: var(--text); margin: 0; font-size: 13.5px; }
+  .callout p + p { margin-top: 8px; }
+  .callout strong { color: var(--text); font-weight: 600; }
+
+  /* ─── STATUS PILL ─── */
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--green-soft);
+    color: var(--green);
+    margin-left: 8px;
+  }
+  .pill.pending { background: var(--orange-soft); color: var(--orange); }
+
+  /* ─── STEP LIST ─── */
+  ol.steps {
+    list-style: none;
+    counter-reset: step;
+    margin-top: 12px;
+  }
+  ol.steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 38px;
+    margin-bottom: 14px;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  ol.steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-weight: 600;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ol.steps li strong { color: var(--text); font-weight: 600; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--card-border);
+    color: var(--text-dim);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .footer strong { color: var(--text-muted); }
+
+  @media (max-width: 800px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 28px 22px 60px; }
+    .report-header h1 { font-size: 24px; }
+    .funnel { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-text">CareerCoin</div>
+    <div class="logo-sub">Proposta Progetto 3</div>
+  </div>
+  <div class="sidebar-section-label">Indice</div>
+  <a href="#partenza" class="active">Punto di partenza</a>
+  <a href="#progetto3">Progetto 3 — overview</a>
+  <a href="#funnel">Funnel & strategia</a>
+  <a href="#dettaglio">Cosa include</a>
+  <a href="#priorita">UGC o app prima?</a>
+  <a href="#riepilogo">Riepilogo economico</a>
+  <a href="#prossimi-passi">Prossimi passi</a>
+  <div class="sidebar-section-label">Documento</div>
+  <a href="#footer">Note finali</a>
+</aside>
+
+<main class="main">
+
+  <header class="report-header">
+    <div class="eyebrow">Proposta commerciale</div>
+    <h1>Progetto 3 — Acquisizione Ads Meta + Email Funnel</h1>
+    <div class="subtitle">
+      Antonio Caruso · Marketing &amp; Tracking
+      <span>·</span>
+      Per Marco Parisi · CareerCoin
+      <span>·</span>
+      Aprile 2026
+    </div>
+  </header>
+
+  <!-- ═══════════════ PUNTO DI PARTENZA ═══════════════ -->
+  <section id="partenza">
+    <h2>1. Punto di partenza</h2>
+    <p>
+      Riprendiamo dopo la pausa di marzo-aprile. Da quando ci siamo sentiti l'ultima volta tu hai portato avanti dei miglioramenti sul sito a partire dai red flag dei due audit UX (non-member e member area), mentre la base tecnica del Progetto 1 e del Progetto 2 è già operativa: GTM, GA4, Meta Pixel, Google Ads e TikTok Pixel sono attivi e raccolgono dati, e le due conversioni chiave (sign_up_submitted e account_activated) sono live su tutte le piattaforme.
+    </p>
+    <p>
+      Quello che manca prima di accendere ads è una verifica che le implementazioni dello sviluppatore abbiano effettivamente chiuso i red flag segnalati, che le performance del sito siano in una soglia accettabile per non bruciare budget pubblicitario, e che l'app mobile sia stabile e pronta a ricevere traffico pagato. Per questo il Progetto 3 parte con uno Step 0 di verifica integrato (incluso nel prezzo), e poi prosegue con il setup completo di acquisizione e email funnel.
+    </p>
+
+    <table>
+      <thead>
+        <tr><th>Componente</th><th>Stato</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Tracking core (GTM + GA4 + Meta Pixel + Google Ads)</td><td><strong>Live</strong> <span class="pill">OK</span></td></tr>
+        <tr><td>Conversioni sign_up_submitted, account_activated</td><td><strong>Live</strong> <span class="pill">OK</span></td></tr>
+        <tr><td>TikTok Pixel via GTM</td><td><strong>Live</strong> <span class="pill">OK</span></td></tr>
+        <tr><td>Eventi GA4 avanzati (cv_uploaded, referral, coins)</td><td>Da verificare dopo intervento dev <span class="pill pending">In attesa</span></td></tr>
+        <tr><td>Audit UX non-member &amp; member</td><td><strong>Consegnati</strong> <span class="pill">OK</span></td></tr>
+        <tr><td>SEO / Performance report</td><td><strong>Consegnato</strong> <span class="pill">OK</span></td></tr>
+        <tr><td>Verifica web post-fix + test app mobile end-to-end</td><td>Step 0 Progetto 3 <span class="pill pending">Da fare</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══════════════ PROGETTO 3 ═══════════════ -->
+  <section id="progetto3">
+    <h2>2. Progetto 3 — Acquisizione Ads + Email Funnel</h2>
+    <p>
+      Questa è la fase in cui finalmente accendiamo il motore. La struttura del sito porta a una scelta strategica chiara: <strong>le ads non vendono il prodotto direttamente, portano le persone a iscriversi a CareerCoin e a scaricare l'app</strong>. La vendita del CareerSearch Agent (9€) avviene dopo, via email, a utenti che conoscono già la piattaforma. Con un prodotto a quel prezzo, vendere via ads in cold traffic non è economicamente sostenibile: il costo per acquisizione di una vendita diretta sarebbe più alto del prodotto stesso.
+    </p>
+    <p>
+      Il funnel che propongo è quello che combacia con quello che mi descrivi nell'ultima email: portare quante più persone possibile dentro la piattaforma e sull'app, e poi monetizzare con email sequence e broadcast su una base utenti che ha già fatto il primo passo.
+    </p>
+  </section>
+
+  <!-- ═══════════════ FUNNEL ═══════════════ -->
+  <section id="funnel">
+    <h2>3. Funnel — strategia a doppio binario</h2>
+    <p>
+      Nell'ultima email mi scrivi che vuoi puntare a far scaricare l'app a più persone possibile e sperare che poi acquistino il servizio. Ti chiedi anche se prima debba girare bene l'app. La risposta operativa è una strategia <strong>a doppio binario</strong>, non una sola via: il Binario A (signup web) parte sempre, il Binario B (app install) si attiva quando il Task ponte conferma che l'app è solida e pronta a ricevere traffico pagato.
+    </p>
+
+    <div class="card blue" style="margin-top:16px;">
+      <div class="card-head">
+        <div class="card-title">Binario A · Signup web come primo touchpoint</div>
+        <div class="card-tag blue">Sempre attivo</div>
+      </div>
+      <div class="funnel">
+        <span class="funnel-step start">Meta Ads</span>
+        <span class="funnel-arrow">→</span>
+        <span class="funnel-step">Home careercoin.io</span>
+        <span class="funnel-arrow">→</span>
+        <span class="funnel-step">Signup web</span>
+        <span class="funnel-arrow">→</span>
+        <span class="funnel-step">Email welcome + invito app</span>
+        <span class="funnel-arrow">→</span>
+        <span class="funnel-step end">Acquisto · 9€</span>
+      </div>
+      <ul style="margin-top:14px;">
+        <li><strong>Attrito minimo</strong>: signup è gratuito, funziona su desktop e mobile, nessuna dipendenza dallo store</li>
+        <li><strong>Controllo del flusso end-to-end</strong>: vediamo dove la gente cade e ottimizziamo (landing, form, email)</li>
+        <li><strong>Fallback sicuro</strong>: anche se l'app ha problemi, l'utente è dentro la lista email e può comprare via web</li>
+        <li><strong>Email post-signup automatica</strong> con CTA "Scarica l'app" come naturale step successivo</li>
+      </ul>
+    </div>
+
+    <div class="card accent" style="margin-top:16px;">
+      <div class="card-head">
+        <div class="card-title">Binario B · App install diretto</div>
+        <div class="card-tag">Si attiva dopo Task ponte</div>
+      </div>
+      <div class="funnel">
+        <span class="funnel-step start">Meta Ads (App Install)</span>
+        <span class="funnel-arrow">→</span>
+        <span class="funnel-step">App Store / Play Store</span>
+        <span class="funnel-arrow">→</span>
+        <span class="funnel-step">Onboarding in-app</span>
+        <span class="funnel-arrow">→</span>
+        <span class="funnel-step end">Acquisto in-app · 9€</span>
+      </div>
+      <ul style="margin-top:14px;">
+        <li><strong>Intent più alto</strong>: chi installa l'app è già un utente più caldo di chi fa signup web</li>
+        <li><strong>Solo mobile</strong>: si perdono tutti gli utenti desktop che invece il Binario A intercetta</li>
+        <li><strong>Richiede app stabile</strong>: review degli store, onboarding fluido, no crash</li>
+        <li><strong>Costo per install più alto</strong> di un costo per signup, ma utente potenzialmente più qualificato</li>
+      </ul>
+    </div>
+
+    <div class="callout accent" style="margin-top:16px;">
+      <p><strong>Decisione operativa.</strong> Lo Step 0 di verifica (incluso nel Progetto 3) testa la stabilità dell'app oltre a quella del web. Se l'app è solida, attiviamo subito entrambi i binari con uno split di budget 60/40 (60% web signup, 40% app install) per generare segnali su entrambi i fronti e capire dove va meglio il costo per acquisizione. Se l'app non è ancora pronta, partiamo solo Binario A e attiviamo il Binario B appena lo sviluppatore chiude le criticità, senza fermare le campagne nel frattempo.</p>
+    </div>
+
+    <p style="margin-top:18px;">
+      In parallelo a entrambi i binari, una sequenza broadcast dedicata agli iscritti già esistenti che non passeranno dalla nuova welcome email: per loro CTA diretta al CareerSearch Agent + invito esplicito a scaricare l'app. Quick win immediato, costo zero, segnali utili per capire come monetizzare la base attuale.
+    </p>
+  </section>
+
+  <!-- ═══════════════ DETTAGLIO ═══════════════ -->
+  <section id="dettaglio">
+    <h2>4. Cosa include il Progetto 3</h2>
+
+    <div class="card yellow">
+      <div class="card-head">
+        <div class="card-title">Step 0 · Verifica web + test app mobile</div>
+        <div class="card-tag yellow">Pre-requisito</div>
+      </div>
+      <p style="margin-bottom:8px;">Il giro di test che ci eravamo detti via email il 16 marzo, ampliato per coprire anche l'app mobile. Serve a stabilire con quale binario partiamo e con che split di budget.</p>
+      <ul>
+        <li><strong>Re-test UX completo</strong> con accessi profilo Candidato e Profilo Employer (non Admin), per verificare le aree che agli audit precedenti erano inibite</li>
+        <li><strong>Verifica chiusura red flag</strong> dei due report UX consegnati: Add Job CTA, sezione CV, security/privacy candidate data, language switching, checkout slug</li>
+        <li><strong>Check performance</strong> post-miglioramenti: PageSpeed mobile + desktop sulle pagine chiave, confronto con baseline del report SEO consegnato</li>
+        <li><strong>Test app mobile end-to-end</strong> (iOS + Android se disponibili): install dallo store, onboarding, login, navigazione core, acquisto in-app del CareerSearch Agent, stabilità sotto uso reale</li>
+        <li><strong>Verifica eventi GA4 avanzati</strong>: cv_uploaded, referral_created, coins_earned, coins_spent. Test che i dataLayer push dello sviluppatore arrivino in GA4 come previsto</li>
+        <li><strong>Mini-report sintetico</strong> con: cosa è stato chiuso, cosa rimane aperto, semaforo go/no-go separato per <strong>Web</strong> e per <strong>App</strong>, raccomandazione split di budget Meta</li>
+      </ul>
+      <div class="callout" style="margin-top:14px;">
+        <p><strong>Perché lo facciamo prima.</strong> L'algoritmo di Meta misura anche bounce e tempo on-page sulle landing dopo il click. Se signup, app onboarding o flusso post-registrazione sono ancora rotti, il costo per acquisizione sale nelle prime 2 settimane di campagna e tutto il resto della performance ne risente. Lo Step 0 ti salva potenzialmente molto di più in budget ads bruciato.</p>
+      </div>
+    </div>
+
+    <div class="card accent">
+      <div class="card-head">
+        <div class="card-title">Step 1 · Campagne Meta — doppio binario web + app</div>
+        <div class="card-tag">Core</div>
+      </div>
+      <p style="margin-bottom:8px;">Due campagne distinte sotto una stessa strategia. Niente vendita diretta del prodotto a 9€ in fase ads cold: portiamo le persone dentro la piattaforma, la conversione avviene dopo.</p>
+      <ul>
+        <li><strong>Creazione e setup completo Meta Ad Account dedicato</strong>: nuovo ad account dentro il Business Manager, struttura account, audience custom e lookalike sul pixel del sito + SDK app, eventi di conversione configurati separatamente per signup web e app install</li>
+        <li><strong>Campagna Binario A — Conversion / Signup web</strong>: obiettivo signup su careercoin.io, ottimizzazione su evento sign_up_submitted, traffico desktop + mobile</li>
+        <li><strong>Campagna Binario B — App Install</strong>: obiettivo install dell'app iOS/Android, ottimizzazione su install completato + evento in-app post-onboarding. <em>Si attiva solo dopo green light del Task ponte sulla stabilità app</em></li>
+        <li><strong>Strategia creative</strong>: 2-3 angle di messaggio testati su entrambi i binari (rete professionale, token rewards, CV intelligence, opportunità lavoro)</li>
+        <li><strong>Copy e impostazione di 4-6 ad variants</strong> in formato singolo + carosello, ottimizzati per mobile</li>
+        <li><strong>Targeting</strong>: persone in cerca di lavoro, neolaureati, professionisti che vogliono cambiare settore, B2C 25-45 Italia</li>
+        <li><strong>KPI principali</strong>: costo per signup web (Binario A) e costo per install + onboarding completato (Binario B). Confronto settimanale per riallocare budget verso il binario più efficiente</li>
+      </ul>
+    </div>
+
+    <div class="card blue">
+      <div class="card-head">
+        <div class="card-title">Step 2 · Email sequence Brevo — vendita CareerSearch Agent</div>
+        <div class="card-tag blue">Conversione</div>
+      </div>
+      <p style="margin-bottom:8px;">Hai già 5 email impostate in Brevo, non si ricomincia da zero.</p>
+      <ul>
+        <li><strong>Revisione delle 5 email esistenti</strong>: copy, timing, CTA, linking al nuovo funnel di acquisizione</li>
+        <li><strong>1-2 email nuove dedicate</strong> al CareerSearch Agent, inserite nel punto giusto della sequenza dopo il momento di massimo engagement</li>
+        <li><strong>Copy diretto, personale</strong>, senza template grafici elaborati: in questo segmento il testo semplice converte meglio del giornalino HTML</li>
+        <li><strong>Tracking aperture, click e conversioni</strong> agganciato agli eventi GTM già attivi</li>
+      </ul>
+    </div>
+
+    <div class="card green" style="margin-top:16px;">
+      <div class="card-head">
+        <div class="card-title">Step 3 · Broadcast iscritti esistenti</div>
+        <div class="card-tag green">Quick win</div>
+      </div>
+      <p style="margin-bottom:8px;">Gli utenti registrati prima del lancio non passeranno dalla welcome sequence. Per loro un broadcast dedicato che introduce il CareerSearch Agent.</p>
+      <ul>
+        <li><strong>2-3 email broadcast</strong>, più corte e dirette delle email di nurturing</li>
+        <li>CTA diretta al prodotto, senza riscaldamento (conoscono già la piattaforma)</li>
+        <li>Possibile A/B test su soggetto e angle per affinare il messaggio prima di scrivere le email per i nuovi iscritti</li>
+      </ul>
+    </div>
+
+    <div class="card orange">
+      <div class="card-head">
+        <div class="card-title">Step 4 · Brief UGC per i creator</div>
+        <div class="card-tag orange">Contenuti</div>
+      </div>
+      <p style="margin-bottom:8px;">Tu trovi le persone, io ti consegno la struttura. Niente avanti e indietro con i creator che non capiscono cosa devono fare.</p>
+      <ul>
+        <li><strong>Documento brief completo</strong>: format video, durata, hook di apertura, script guida, call to action, esempi di reference</li>
+        <li><strong>Tone of voice e do/don't</strong> calibrati su CareerCoin per non disperdere il messaggio brand</li>
+        <li><strong>Suggerimenti operativi</strong> su dove cercare i creator (Upwork, Fiverr, agenzie italiane low-cost) con range di prezzo realistici</li>
+      </ul>
+    </div>
+
+    <div class="card yellow">
+      <div class="card-head">
+        <div class="card-title">Step 5 · Custom conversions Meta &amp; chiusura gap tracking</div>
+        <div class="card-tag yellow">Tecnico</div>
+      </div>
+      <p style="margin-bottom:8px;">I tag GTM per i 4 eventi avanzati (cv_uploaded, referral_created, coins_earned, coins_spent) erano stati pre-configurati nel Progetto 1 in attesa dei dataLayer push lato backend. Lo Step 0 verifica che ora arrivino. Qui non si rifà ciò che è già fatto: si lavora solo lato Meta e sulla documentazione residua.</p>
+      <ul>
+        <li><strong>Custom conversions lato Meta</strong> sugli intent signal verificati attivi: ottimizzazione campagne su chi carica CV, chi guadagna coin, chi crea referral, anziché solo sul signup grezzo. Permette all'algoritmo di Meta di trovare utenti più qualificati a parità di budget</li>
+        <li><strong>Custom audiences di retargeting</strong> basate su questi eventi: chi ha caricato CV ma non ha attivato l'account, chi ha guadagnato coin ma non li ha spesi, ecc.</li>
+        <li><strong>Lista azioni rimanenti per lo sviluppatore</strong> (se ne emergono nello Step 0): documento sintetico con cosa manca, perché serve, e priorità per non bloccare le campagne</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Step 6 · Gestione 30 giorni</div>
+        <div class="card-tag">Inclusa</div>
+      </div>
+      <ul>
+        <li><strong>Monitoraggio performance giornaliero</strong> con ottimizzazioni budget e creative ogni 3-4 giorni</li>
+        <li><strong>2 check-in settimanali con report sintetico</strong> via email: cosa funziona, cosa cambio, dati su signup, install, costo per acquisizione</li>
+        <li><strong>Spegnimento e riallineamento</strong> di varianti che dopo 7 giorni non performano</li>
+        <li><strong>Report finale 30 giorni</strong> con raccomandazioni per il mese successivo</li>
+      </ul>
+    </div>
+
+    <div class="callout yellow">
+      <p><strong>Budget ads escluso dal preventivo.</strong> I 200-250 €/mese di budget Meta sono i soldi che spendi tu direttamente sulla piattaforma pubblicitaria. Il mio compenso copre setup, strategia, gestione, copy, email sequence e tutto il lavoro tecnico sopra elencato.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ UGC O APP PRIMA ═══════════════ -->
+  <section id="priorita">
+    <h2>5. Risposta alla tua domanda — UGC o app prima?</h2>
+    <p>
+      Nell'ultima email mi chiedi se iniziare cercando i creator UGC o se prima far girare bene l'app. La risposta operativa è: <strong>nessuna delle due in sequenza, vanno in parallelo</strong>. Si parte con lo Step 0 di verifica (web + app), che chiarisce in 3-4 giorni se l'app può ricevere traffico pagato subito. In parallelo io produco il brief UGC e tu inizi i contatti con i creator. Così non perdiamo nemmeno un giorno mentre l'app si stabilizza, e quando le creative UGC sono pronte le campagne sono già attive con materiale provvisorio.
+    </p>
+
+    <ol class="steps">
+      <li><strong>Settimana 1</strong> — Step 0: verifica fix UX, performance, test app mobile end-to-end. Output: mini-report con semaforo go/no-go separato per Web e App.</li>
+      <li><strong>Settimana 1-2 (in parallelo)</strong> — Brief UGC consegnato. Tu inizi i contatti con i creator (i video richiedono 2-3 settimane per essere prodotti, conviene partire subito).</li>
+      <li><strong>Settimana 2</strong> — Setup completo Meta Ads (entrambi i binari, o solo A se l'app non è pronta), struttura campagna, prima creative basata su materiale già esistente in attesa degli UGC.</li>
+      <li><strong>Settimana 3</strong> — Revisione email Brevo + scrittura email nuove + broadcast iscritti. Lancio campagna con creative provvisorie.</li>
+      <li><strong>Settimana 4</strong> — Arrivano i primi UGC, sostituiamo le creative provvisorie con quelle UGC. Da qui parte il vero ciclo di ottimizzazione.</li>
+      <li><strong>30 giorni dal lancio</strong> — Report con dati reali, decisioni su budget mese 2 e roadmap successiva.</li>
+    </ol>
+
+    <div class="callout accent">
+      <p><strong>Perché in parallelo e non in sequenza.</strong> Aspettare gli UGC prima di lanciare significa stare fermi 3 settimane in più senza dati. Lanciare con creative interne o stock mentre gli UGC vengono prodotti ci dà 2 settimane in più di learning algoritmico Meta e ci permette di sostituire le creative quando già sappiamo quali angle stanno performando meglio.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ RIEPILOGO ECONOMICO ═══════════════ -->
+  <section id="riepilogo">
+    <h2>6. Riepilogo economico</h2>
+    <p>
+      Progetto unico, prezzo unico, una sola fattura, una sola timeline. Tutto integrato — dallo Step 0 di verifica web e app fino al report finale post-30 giorni di gestione campagne.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Tempistiche</th>
+          <th style="text-align:right;">Prezzo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Progetto 3 — Acquisizione Ads + Email Funnel</strong><br>
+          <span style="color: var(--text-dim); font-size: 12.5px;">Step 0 verifica web + app · Setup Meta doppio binario · Email Brevo · Broadcast iscritti · Brief UGC · Custom conversions Meta · 30gg gestione</span></td>
+          <td>1 mese e mezzo end-to-end</td>
+          <td class="price" style="text-align:right;">650 €</td>
+        </tr>
+        <tr class="total">
+          <td><strong>Totale netto</strong></td>
+          <td>—</td>
+          <td class="price" style="text-align:right;">650 €</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table style="margin-top:18px;">
+      <thead>
+        <tr>
+          <th>Scenario fatturazione</th>
+          <th>IVA</th>
+          <th style="text-align:right;">Totale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Fattura a partita IVA</strong> italiana o UE (amico, familiare, società)</td>
+          <td>Reverse charge intra-UE — nessuna IVA in fattura</td>
+          <td class="price" style="text-align:right;">650 €</td>
+        </tr>
+        <tr>
+          <td>Fattura a privato senza partita IVA (Marco Parisi CF)</td>
+          <td>IVA maltese 18% B2C cross-border (117 €)</td>
+          <td class="price" style="text-align:right; color: var(--text-muted);">767 €</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout green" style="margin-top:18px;">
+      <p><strong>Sul prezzo.</strong> Chiudiamo a 650€ come da tua proposta. È in linea con quanto avevamo già discusso a febbraio (marketing + verification): la cifra non cambia rispetto allo storico. L'unica novità reale rispetto al passato è la trasparenza sulla gestione IVA, che fino al Progetto 2 avevo assorbito io e che ora va sistemata correttamente in fattura.</p>
+    </div>
+
+    <div class="callout yellow" style="margin-top:14px;">
+      <p><strong>Nota fiscale — IVA condizionata al destinatario fattura.</strong> Come confermatomi dal mio commercialista:</p>
+      <p>• <strong>Se mi indichi una partita IVA</strong> (tua, di amico, familiare o società italiana o UE), si applica il <strong>reverse charge intra-UE</strong>: l'IVA non viene addebitata in fattura, il destinatario la gestisce nel proprio regime. <strong>Tu paghi 650€ totali.</strong></p>
+      <p>• <strong>Se fatturo a te come privato</strong> (codice fiscale Marco Parisi), si applica l'IVA maltese al 18% B2C cross-border. <strong>Tu paghi 767€ totali</strong> (650 + 117 IVA).</p>
+      <p><strong>Sulle fatture precedenti.</strong> Per il Progetto 1 e il Progetto 2 non ero a conoscenza di questo obbligo e l'IVA dovuta l'ho assorbita io di tasca mia per non gravare retroattivamente sul tuo budget. Da questo progetto in avanti devo applicarla correttamente o, idealmente, evitarla del tutto col reverse charge: ecco perché ti chiedo se hai una partita IVA a cui intestare la fattura.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PROSSIMI PASSI ═══════════════ -->
+  <section id="prossimi-passi">
+    <h2>7. Prossimi passi</h2>
+    <ol class="steps">
+      <li><strong>Conferma per partire</strong> — risposta scritta o approvazione su questa proposta</li>
+      <li><strong>Fatturazione e pagamento</strong>: come per le fasi precedenti, split <strong>50% all'avvio + 50% alla consegna</strong> via Revolut Business. Con partita IVA in fattura → 325€ acconto + 325€ saldo = 650€. Senza partita IVA (privato) → 383,50€ acconto + 383,50€ saldo = 767€</li>
+      <li><strong>Mi confermi quando lo sviluppatore ha completato</strong> i miglioramenti che stai portando avanti — appena hai pronto, parto con lo Step 0 di verifica entro 3-4 giorni dalla tua conferma</li>
+      <li><strong>Tu intanto inizi i contatti creator UGC</strong> — dopo settimana 1 ti consegno il brief che gli passi così iniziano la produzione mentre noi lanciamo con creative provvisorie</li>
+    </ol>
+
+    <div class="callout" style="margin-top:14px;">
+      <p><strong>Sugli accessi.</strong> Sono già dentro Meta Business Manager, Brevo e gli altri strumenti dal Progetto 1 e 2: ho tutto quello che serve per partire. Non ti chiedo nulla in più sul fronte tecnico, mi auto-assegno gli accessi rimanenti dove necessario.</p>
+    </div>
+  </section>
+
+  <footer class="footer" id="footer">
+    <p>
+      <strong>Validità proposta:</strong> 30 giorni dalla data di invio.<br>
+      <strong>Disponibilità per chiarimenti:</strong> rispondo entro 24 ore via email su qualsiasi punto.<br>
+      <strong>Modalità di pagamento:</strong> 50% all'avvio + 50% alla consegna, via Revolut Business (come Fase 1 e 2). Bonifico SEPA standard.<br>
+      <strong>Documenti collegati:</strong> Report Progetto 1 (tracking), Report UX Non-member, Report UX Member Area, Report SEO &amp; Performance.
+    </p>
+    <p style="margin-top:14px;">
+      Antonio Caruso · Marketing &amp; Tracking Consultant · caruso.martech@gmail.com · <a href="https://carusomartech.com" style="color: var(--accent); text-decoration: none;">carusomartech.com</a>
+    </p>
+  </footer>
+
+</main>
+
+</body>
+</html>
